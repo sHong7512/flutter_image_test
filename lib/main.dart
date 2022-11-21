@@ -63,29 +63,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget checkBox() {
-    return Row(children: ImageFormat.values.map((e) => formatSwitch(e)).toList());
-  }
-
-  Widget formatSwitch(ImageFormat format) {
-    return Expanded(
-      flex: 1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(format.name),
-          Switch(
-            value: currentFormat == format,
-            onChanged: (value) {
-              log('$format ::: $value');
-              if (value) {
-                currentFormat = format;
-              }
-              setState(() {});
-            },
-          ),
-        ],
-      ),
-    );
+    return Row(
+        children: ImageFormat.values
+            .map((e) => Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(e.name),
+                      Switch(
+                        value: currentFormat == e,
+                        onChanged: (value) {
+                          log('$e ::: $value');
+                          if (value) {
+                            currentFormat = e;
+                          }
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                ))
+            .toList());
   }
 
   Widget imageSelector() {
@@ -104,16 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
       children: rainbowColors
           .map(
             (e) => Expanded(
-          flex: 1,
-          child: GestureDetector(
-            onTap: () {
-              currentColor = e;
-              setState(() {});
-            },
-            child: Container(color: e),
-          ),
-        ),
-      )
+              flex: 1,
+              child: GestureDetector(
+                onTap: () {
+                  currentColor = e;
+                  setState(() {});
+                },
+                child: Container(color: e),
+              ),
+            ),
+          )
           .toList(),
     );
   }
@@ -131,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
               break;
             case ImageFormat.svg:
               final name = file.path.substring(file.path.length - 3, file.path.length);
-              if(name != 'svg'){
+              if (name != 'svg') {
                 svgPicture = errorWidget(file);
-              }else{
+              } else {
                 await _svg(file);
               }
               break;
@@ -149,29 +148,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _lottie(File file) => lottieBuilder = Lottie.file(
-    file,
-    errorBuilder: (_, e, s) {
-      lottieBuilder = null;
-      return errorWidget(file);
-    },
-  );
+        file,
+        errorBuilder: (_, e, s) {
+          lottieBuilder = null;
+          return errorWidget(file);
+        },
+      );
 
   _svg(File file) => svgPicture = SvgPicture.file(
-    file,
-    placeholderBuilder: (_) {
-      return errorWidget(file);
-    },
-  );
+        file,
+        placeholderBuilder: (_) {
+          return errorWidget(file);
+        },
+      );
 
   _other(File file) => image = Image.file(
-    file,
-    errorBuilder: (_, __, ___) {
-      image = null;
-      return errorWidget(file);
-    },
-  );
+        file,
+        errorBuilder: (_, __, ___) {
+          image = null;
+          return errorWidget(file);
+        },
+      );
 
-  Widget errorWidget(File file){
+  Widget errorWidget(File file) {
     final lastIndex = file.path.lastIndexOf('/');
     final name = file.path.substring(lastIndex + 1, file.path.length);
     return Center(
